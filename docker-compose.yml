@@ -1,0 +1,28 @@
+version: "3"
+networks:
+  main:
+services:
+  hub:
+    image: docker.moscow.alfaintra.net/selenium/hub:3.2.0-5
+    ports:
+      - "4444:4444"
+    environment:
+      SE_OPTS: -debug true -host hub
+    networks:
+      main:
+        aliases:
+          - hub
+  node:
+    image: docker.moscow.alfaintra.net/selenium/node-chrome:3.2.0
+    links:
+      - hub
+    environment:
+      SE_OPTS: -debug true -host node
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
+      HOST: node
+      PORT0: 5555
+    networks:
+      main:
+        aliases:
+          - hub
